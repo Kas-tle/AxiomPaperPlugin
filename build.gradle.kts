@@ -1,4 +1,5 @@
 plugins {
+    `java-library`
     alias(libs.plugins.paperweight.userdev)
     alias(libs.plugins.run.paper) // Adds runServer and runMojangMappedServer tasks for testing
 
