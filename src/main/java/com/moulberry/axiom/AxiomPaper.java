@@ -6,6 +6,7 @@ import com.moulberry.axiom.buffer.CompressedBlockEntity;
 import com.moulberry.axiom.commands.AxiomDebugCommand;
 import com.moulberry.axiom.event.AxiomCreateWorldPropertiesEvent;
 import com.moulberry.axiom.event.AxiomModifyWorldEvent;
+import com.moulberry.axiom.integration.coreprotect.CoreProtectIntegration;
 import com.moulberry.axiom.integration.plotsquared.PlotSquaredIntegration;
 import com.moulberry.axiom.packet.*;
 import com.moulberry.axiom.world_properties.server.ServerWorldPropertiesRegistry;
@@ -38,7 +39,7 @@ import org.bukkit.plugin.messaging.Messenger;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.incendo.cloud.bukkit.CloudBukkitCapabilities;
 import org.incendo.cloud.execution.ExecutionCoordinator;
-import org.incendo.cloud.paper.PaperCommandManager;
+import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.FileReader;
@@ -285,7 +286,7 @@ public class AxiomPaper extends JavaPlugin implements Listener {
             WorldExtension.tick(MinecraftServer.getServer(), sendMarkers, maxChunkRelightsPerTick, maxChunkSendsPerTick);
         }, 1, 1);
 
-        PaperCommandManager<CommandSender> manager = PaperCommandManager.createNative(
+        LegacyPaperCommandManager<CommandSender> manager = LegacyPaperCommandManager.createNative(
             this,
             ExecutionCoordinator.simpleCoordinator()
         );
@@ -295,6 +296,10 @@ public class AxiomPaper extends JavaPlugin implements Listener {
         }
 
         AxiomDebugCommand.register(this, manager);
+
+        if (CoreProtectIntegration.isEnabled()) {
+            this.getLogger().info("CoreProtect integration enabled");
+        }
     }
 
     public boolean logLargeBlockBufferChanges() {
